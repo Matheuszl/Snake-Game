@@ -15,77 +15,59 @@
 #define LEFT 75
 #define RIGHT 77
 
-int length;
-int bend_no;
+int comprimento;
+int dobrar_no;
 int len;
-char key;
+char chave;
+int vida;
 void SalvarTXT();
-//void load(); da pra excluir
-int life;
-void Delay(long double);
-void Andar();  //Move
+void Tempo(long double);
+void Andar();  
 void Bonus();
 int Pontuacao();
 void Texto();
 void gotoxy(int x, int y);
 void GotoXY(int x,int y);
-void Bend();
+void Movimento();
 void Borda();
-void Down();
-void Left();
-void Up();
-void Right();
+void ParaBaixo();
+void ParaEsquerda();
+void ParaCima();
+void ParaDireita();
 void Sair();
-int Scoreonly();
+int Pontos();
  
 struct coordinate{
     int x;
     int y;
-    int direction;
+    int direcao;
 };
  
 typedef struct coordinate coordinate;
  
-coordinate head, bend[500],food,body[30];
+coordinate cabeca, dobrar[500],bonus,corpo[30];
  
 int main()
 {
- 
-    char key;
- 
+    char chave;
     Texto();
- 
     system("cls");
- 
-    //load();
- 
-    length=05;
- 
-    head.x=25;
- 
-    head.y=20;
- 
-    head.direction=RIGHT;
- 
+    comprimento=05;
+    cabeca.x=25;
+    cabeca.y=20;
+    cabeca.direcao=RIGHT;
     Borda(); //situaçao de contato
- 
     Bonus(); //gera as cordenadas primeiramente
- 
-    life=5; //vidas
- 
-    bend[0]=head;
- 
-    Andar();   //initialing initial bend coordinate
- 
+    vida=1; //vidas
+    dobrar[0]=cabeca;
+    Andar();   //inicializa as cordenadas
     return 0;
  
 }
- 
 void Andar()
 {
     int a,i;
- 
-    do{
+     do{
  
         Bonus();
         fflush(stdin); //LIMPA O BUFFER DO TECLADO
@@ -96,35 +78,35 @@ void Andar()
  
         {
  
-            body[i].x=0;
+            corpo[i].x=0;
  
-            body[i].y=0;
+            corpo[i].y=0;
  
-            if(i==length)
+            if(i==comprimento)
  
             break;
  
         }
  
-        Delay(length);
+        Tempo(comprimento);
  
         Borda();
  
-        if(head.direction==RIGHT)
+        if(cabeca.direcao==RIGHT)
  
-            Right();
+             ParaDireita();
  
-        else if(head.direction==LEFT)
+        else if(cabeca.direcao==LEFT)
  
-            Left();
+            ParaEsquerda();
  
-        else if(head.direction==DOWN)
+        else if(cabeca.direcao==DOWN)
  
-            Down();
+            ParaBaixo();
  
-        else if(head.direction==UP)
+        else if(cabeca.direcao==UP)
  
-            Up();
+            ParaCima();
  
         Sair();
  
@@ -141,39 +123,39 @@ void Andar()
         exit(0);
  
     }
-    key=getch();
+    chave=getch();
  
-    if((key==RIGHT&&head.direction!=LEFT&&head.direction!=RIGHT)||(key==LEFT&&head.direction!=RIGHT&&head.direction!=LEFT)||(key==UP&&head.direction!=DOWN&&head.direction!=UP)||(key==DOWN&&head.direction!=UP&&head.direction!=DOWN))
+    if((chave==RIGHT&&cabeca.direcao!=LEFT&&cabeca.direcao!=RIGHT)||(chave==LEFT&&cabeca.direcao!=RIGHT&&cabeca.direcao!=LEFT)||(chave==UP&&cabeca.direcao!=DOWN&&cabeca.direcao!=UP)||(chave==DOWN&&cabeca.direcao!=UP&&cabeca.direcao!=DOWN))
  
     {
  
-        bend_no++;
+        dobrar_no++;
  
-        bend[bend_no]=head;
+        dobrar[dobrar_no]=cabeca;
  
-        head.direction=key;
+        cabeca.direcao=chave;
  
-        if(key==UP)
+        if(chave==UP)
  
-            head.y--;
+            cabeca.y--;
  
-        if(key==DOWN)
+        if(chave==DOWN)
  
-            head.y++;
+            cabeca.y++;
  
-        if(key==RIGHT)
+        if(chave==RIGHT)
  
-            head.x++;
+            cabeca.x++;
  
-        if(key==LEFT)
+        if(chave==LEFT)
  
-            head.x--;
+            cabeca.x--;
  
         Andar();
  
     }
  
-    else if(key==27)
+    else if(chave==27)
  
     {
  
@@ -216,65 +198,54 @@ void GotoXY(int x, int y)
     a = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleCursorPosition(a,b);
  }
-/*
-void load(){
-    int row,col,r,c,q;
-    gotoxy(36,14);
-    printf("loading...");
-    gotoxy(30,15);
-    for(r=1;r<=20;r++){
-    for(q=0;q<=100000000;q++);//to display the character slowly
-    printf("%c",177);}
-    getch();
-}
-*/
-void Down()
+void ParaBaixo()
 {
     int i;
-    for(i=0;i<=(head.y-bend[bend_no].y)&&len<length;i++)
+    for(i=0;i<=(cabeca.y-dobrar[dobrar_no].y)&&len<comprimento;i++)
     {
-        GotoXY(head.x,head.y-i);
+        GotoXY(cabeca.x,cabeca.y-i);
         {
             if(len==0)
                 printf("v");
             else
                 printf("*");
         }
-        body[len].x=head.x;
-        body[len].y=head.y-i;
+        corpo[len].x=cabeca.x;cabeca;
+        corpo[len].y=cabeca.y-i;
         len++;
     }
-    Bend();
+    Movimento();
     if(!kbhit())
-        head.y++;
+        cabeca.y++;
 }
-void Delay(long double k)
+void Tempo(long double k)//tempo que ele percorre pelo mapa
 {
+ 
     Pontuacao();
     long double i;
-    for(i=0;i<=(10000000);i++);
+    for(i=0;i<=(1000000);i++);
 }
 void Sair()
 {
     int i,check=0;
-    for(i=4;i<length;i++)   //começa com 4 porque precisa de um mínimo de 4 elementos para tocar o próprio corpo  
+    for(i=4;i<comprimento;i++)   //começa com 4 porque precisa de um mínimo de 4 elementos para tocar o próprio corpo  
     {                       
-        if(body[0].x==body[i].x&&body[0].y==body[i].y)
+        if(corpo[0].x==corpo[i].x&&corpo[0].y==corpo[i].y)
         {
-            check++;    //check's value increases as the coordinates of head is equal to any other body coordinate
+            check++;    //verifica se ta a cabeça da cobra ta na mesma linha que qualquer outra parte do corpo 
         }
-        if(i==length||check!=0)
+        if(i==comprimento||check!=0)
             break;
     }
-    if(head.x<=10||head.x>=70||head.y<=10||head.y>=30||check!=0)
+    if(cabeca.x<=10||cabeca.x>=70||cabeca.y<=10||cabeca.y>=30||check!=0)
     {
-        life--;
-        if(life>=0)
+        vida--;
+        if(vida>=0)
         {
-            head.x=25;
-            head.y=20;
-            bend_no=0;
-            head.direction=RIGHT;
+            cabeca.x=25;
+            cabeca.y=20;
+            dobrar_no=0;
+            cabeca.direcao=RIGHT;
             Andar();
         }
         else
@@ -288,134 +259,134 @@ void Sair()
 }
 void Bonus()
 {
-    if(head.x==food.x&&head.y==food.y)
+    if(cabeca.x==bonus.x&&cabeca.y==bonus.y)
     {
-        length++;
+        comprimento++;
         time_t a;
         a=time(0);
         srand(a);
-        food.x=rand()%70;
-        if(food.x<=10)
-            food.x+=11;
-        food.y=rand()%30;
-        if(food.y<=10)
+        bonus.x=rand()%70;
+        if(bonus.x<=10)
+            bonus.x+=11;
+        bonus.y=rand()%30;
+        if(bonus.y<=10)
  
-            food.y+=11;
+            bonus.y+=11;
     }
-    else if(food.x==0)/*to create food for the first time coz global variable are initialized with 0*/
+    else if(bonus.x==0)/*to create food for the first time coz global variable are initialized with 0*/
     {
-        food.x=rand()%70;
-        if(food.x<=10)
-            food.x+=11;
-        food.y=rand()%30;
-        if(food.y<=10)
-            food.y+=11;
+        bonus.x=rand()%70;
+        if(bonus.x<=10)
+            bonus.x+=11;
+        bonus.y=rand()%30;
+        if(bonus.y<=10)
+            bonus.y+=11;
     }
 }
-void Left()
+void ParaEsquerda()
 {
     int i;
-    for(i=0;i<=(bend[bend_no].x-head.x)&&len<length;i++)
+    for(i=0;i<=(dobrar[dobrar_no].x-cabeca.x)&&len<comprimento;i++)
     {
-        GotoXY((head.x+i),head.y);
+        GotoXY((cabeca.x+i),cabeca.y);
        {
                 if(len==0)
                     printf("<");
                 else
                     printf("*");
         }
-        body[len].x=head.x+i;
-        body[len].y=head.y;
+        corpo[len].x=cabeca.x+i;
+        corpo[len].y=cabeca.y;
         len++;
     }
-    Bend();
+    Movimento();
     if(!kbhit())
-        head.x--;
+        cabeca.x--;
  
 }
-void Right()
+void ParaDireita()
 {
     int i;
-    for(i=0;i<=(head.x-bend[bend_no].x)&&len<length;i++)
+    for(i=0;i<=(cabeca.x-dobrar[dobrar_no].x)&&len<comprimento;i++)
     {
         //GotoXY((head.x-i),head.y);
-        body[len].x=head.x-i;
-        body[len].y=head.y;
-        GotoXY(body[len].x,body[len].y);
+        corpo[len].x=cabeca.x-i;
+        corpo[len].y=cabeca.y;
+        GotoXY(corpo[len].x,corpo[len].y);
         {
             if(len==0)
                 printf(">");
             else
                 printf("*");
         }
-        /*body[len].x=head.x-i;
-        body[len].y=head.y;*/
+        /*corpo[len].x=head.x-i;
+        corpo[len].y=head.y;*/
         len++;
     }
-    Bend();
+    Movimento();
     if(!kbhit())
-        head.x++;
+        cabeca.x++;
 }
-void Bend()
+void Movimento() //dobrar com a cobra
 {
     int i,j,diff;
-    for(i=bend_no;i>=0&&len<length;i--)
+    for(i=dobrar_no;i>=0&&len<comprimento;i--)
     {
-            if(bend[i].x==bend[i-1].x)
+            if(dobrar[i].x==dobrar[i-1].x)
             {
-                diff=bend[i].y-bend[i-1].y;
+                diff=dobrar[i].y-dobrar[i-1].y;
                 if(diff<0)
                     for(j=1;j<=(-diff);j++)
                     {
-                        body[len].x=bend[i].x;
-                        body[len].y=bend[i].y+j;
-                        GotoXY(body[len].x,body[len].y);
+                        corpo[len].x=dobrar[i].x;
+                        corpo[len].y=dobrar[i].y+j;
+                        GotoXY(corpo[len].x,corpo[len].y);
                         printf("*");
                         len++;
-                        if(len==length)
+                        if(len==comprimento)
                             break;
                     }
                 else if(diff>0)
                     for(j=1;j<=diff;j++)
                     {
-                        /*GotoXY(bend[i].x,(bend[i].y-j));
+                        /*GotoXY(dobrar[i].x,(dobrar[i].y-j));
                         printf("*");*/
-                        body[len].x=bend[i].x;
-                        body[len].y=bend[i].y-j;
-                        GotoXY(body[len].x,body[len].y);
+                        corpo[len].x=dobrar[i].x;
+                        corpo[len].y=dobrar[i].y-j;
+                        GotoXY(corpo[len].x,corpo[len].y);
                         printf("*");
                         len++;
-                        if(len==length)
+                        if(len==comprimento)
                             break;
                     }
             }
-        else if(bend[i].y==bend[i-1].y)
+        else if(dobrar[i].y==dobrar[i-1].y)
         {
-            diff=bend[i].x-bend[i-1].x;
+            diff=dobrar[i].x-dobrar[i-1].x;
             if(diff<0)
-                for(j=1;j<=(-diff)&&len<length;j++)
+                for(j=1;j<=(-diff)&&len<comprimento;j++)
                 {
-                    /*GotoXY((bend[i].x+j),bend[i].y);
+                    /*GotoXY((dobrar[i].x+j),dobrar[i].y);
                     printf("*");*/
-                    body[len].x=bend[i].x+j;
-                    body[len].y=bend[i].y;
-                    GotoXY(body[len].x,body[len].y);
+                    corpo[len].x=dobrar[i].x+j;
+                    corpo[len].y=dobrar[i].y;
+                    GotoXY(corpo[len].x,corpo[len].y);
                         printf("*");
                    len++;
-                   if(len==length)
+                   if(len==comprimento)
                            break;
                }
            else if(diff>0)
-               for(j=1;j<=diff&&len<length;j++)
+               for(j=1;j<=diff&&len<comprimento;j++)
                {
-                   /*GotoXY((bend[i].x-j),bend[i].y);
+                   /*GotoXY((dobrar[i].x-j),dobrar[i].y);
                    printf("*");*/
-                   body[len].x=bend[i].x-j;
-                   body[len].y=bend[i].y;
-                   GotoXY(body[len].x,body[len].y);
+                   corpo[len].x=dobrar[i].x-j;
+                   corpo[len].y=dobrar[i].y;
+                   GotoXY(corpo[len].x,corpo[len].y);
                        printf("*");
                    len++;
-                   if(len==length)
+                   if(len==comprimento)
                        break;
                }
        }
@@ -425,7 +396,7 @@ void Borda() //ESSE METODO CRIA A BORDA DO MAPA PARA A COLISAO
 {
    system("cls");
    int i;
-   GotoXY(food.x,food.y);   /*displaying food*/
+   GotoXY(bonus.x,bonus.y);   /*displaying food*/
        printf("X");//alimento da cobrinha
    for(i=10;i<71;i++)
    {
@@ -445,12 +416,11 @@ void Borda() //ESSE METODO CRIA A BORDA DO MAPA PARA A COLISAO
 void Texto()
 {
    //GotoXY(10,12);
-   printf("\tAGORA EU TO NO COMANDO(press any key to continue)\n");
-  getch();
+   printf("\tBem vindo ao jogo 'Caixa de Minhoca'- ENTER\n");
+   getch();
    system("cls");
-   printf("\tGame instructions:\n");
-   printf("\n-> Use arrow keys to move the snake.\n\n-> You will be provided foods at the several coordinates of the screen which you have to eat. Everytime you eat a food the length of the snake will be increased by 1 element and thus the score.\n\n-> Here you are provided with three lives. Your life will decrease as you hit the wall or snake's body.\n\n-> YOu can pause the game in its middle by pressing any key. To continue the paused game press any other key once again\n\n-> If you want to exit press esc. \n");
-   printf("\n\nPress any key to play game...");
+   printf("\tComo jogar:\n");
+   printf("\nUse as setas para fazer os movimentos com a cobra em busca da bonus que a faz crescer de tamanho | ENTER. \n");
    if(getch()==27)
    exit(0);
 }
@@ -461,7 +431,7 @@ void SalvarTXT(){ //ESSE METODO GRAVA EM TXT OS JOGOS KA JOGADOS
    info=fopen("record.txt","a+");
    getch();
    system("cls");
-   printf("Enter your name\n");
+   printf("Digite seu nicname: \n");
    scanf("%[^\n]",plname);
    //************************
    for(j=0;plname[j]!='\0';j++){ //to convert the first letter after space to capital
@@ -474,63 +444,59 @@ void SalvarTXT(){ //ESSE METODO GRAVA EM TXT OS JOGOS KA JOGADOS
    nplname[j]='\0';
    //*****************************
    //sdfprintf(info,"\t\t\tPlayers List\n");
-   fprintf(info,"Player Name :%s\n",nplname);
+   fprintf(info,"Nome usuario: :%s\n",nplname);
     //for date and time
  
    time_t mytime;
   mytime = time(NULL);
-  fprintf(info,"Played Date:%s",ctime(&mytime));
+  fprintf(info,"Data:%s",ctime(&mytime));
      //**************************
-     fprintf(info,"Score:%d\n",px=Scoreonly());//call score to display score
+     fprintf(info,"Pontos:%d\n",px=Pontos());//call score to display score
      //fprintf(info,"\nLevel:%d\n",10);//call level to display level
    for(i=0;i<=50;i++)
    fprintf(info,"%c",'_');
    fprintf(info,"\n");
    fclose(info);
-   printf("wanna see past records press 'y'\n");
-   cha=getch();
-   system("cls");
-   if(cha=='y'){
    info=fopen("record.txt","r");
    do{
        putchar(c=getc(info));
-       }while(c!=EOF);}
+       }while(c!=EOF);
      fclose(info);
 }
 int Pontuacao() //mostra o quadro de pontos e vidas
 {
    int score;
    GotoXY(20,8);
-   score=length-5;
-   printf("Pontos : %d",(length-5));
-   score=length-5;
+   score=comprimento-5;
+   printf("Pontos : %d",(comprimento-5));
+   score=comprimento-5;
    GotoXY(50,8);
-   printf("Sua vida : %d",life);
+   printf("Sua vida : %d",vida);
    return score;
 }
-int Scoreonly()
+int Pontos()
 {
 int score=Pontuacao();
 system("cls");
 return score;
 }
-void Up()
+void ParaCima()
 {
    int i;
-   for(i=0;i<=(bend[bend_no].y-head.y)&&len<length;i++)
+   for(i=0;i<=(dobrar[dobrar_no].y-cabeca.y)&&len<comprimento;i++)
    {
-       GotoXY(head.x,head.y+i);
+       GotoXY(cabeca.x,cabeca.y+i);
        {
            if(len==0)
                printf("^");//cabeça da cobra
            else
                printf("=");//corpo da cobra
                  }
-       body[len].x=head.x;
-       body[len].y=head.y+i;
+       corpo[len].x=cabeca.x;
+       corpo[len].y=cabeca.y+i;
        len++;
    }
-   Bend();
+   Movimento();
    if(!kbhit())
-       head.y--;
+       cabeca.y--;
 }
