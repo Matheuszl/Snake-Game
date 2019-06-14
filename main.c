@@ -1,11 +1,10 @@
 //bibliotecas
 #include <stdio.h>
-#include <time.h>
 #include <stdlib.h>
-#include <conio.h>
+#include <conio.h> //essa biblioteca nao funciona em Ubunto
 #include <time.h>
 #include <ctype.h>
-#include <time.h>
+#include <time.h> //data
 #include <windows.h>
 #include <process.h>
 
@@ -428,7 +427,7 @@ void SalvarTXT(){ //ESSE METODO GRAVA EM TXT OS JOGOS KA JOGADOS
    char plname[20],nplname[20],cha,c;
    int i,j,px;
    FILE *info;
-   info=fopen("record.txt","a+");
+   info=fopen("Historico.txt","a+");
    getch();
    system("cls");
    printf("Digite seu nicname: \n");
@@ -457,7 +456,7 @@ void SalvarTXT(){ //ESSE METODO GRAVA EM TXT OS JOGOS KA JOGADOS
    fprintf(info,"%c",'_');
    fprintf(info,"\n");
    fclose(info);
-   info=fopen("record.txt","r");
+   info=fopen("Historico.txt","r");
    do{
        putchar(c=getc(info));
        }while(c!=EOF);
