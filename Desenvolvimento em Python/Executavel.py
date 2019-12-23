@@ -1,14 +1,22 @@
 import pygame, random
 from pygame.locals import *
+import _thread as _thread, time
+import threading, random
 
 #Este jogo foi desevolvido no intuito de aprender mais sobre a linguagem
 #Aprendiz de: https://www.youtube.com/watch?v=H4TXHI9BRCQ&list=LLP3zwBUBDERBYfK1l72bpkA&index=3&t=0s
 
 #a funcao permite que a maça fique alinhada a matriz da tela
-def maca_in_matriz():
-    x = random.randint(0,390)
-    y = random.randint(0,390)
-    return (x//10 * 10, y//10 * 10) #a divisao inteira nao deixa num ficar quebrado
+def maca_in_matriz(x):
+    if(x == 0):
+        x = random.randint(0,390)
+        y = random.randint(0,390)
+        return (x//10 * 10, y//10 * 10) #a divisao inteira nao deixa num ficar quebrado
+    if(x == 1):
+        x = random.randint(0,390)
+        y = random.randint(0,390)
+        #sleep(random.randint(1, 5))
+        return (x//10 * 10, y//10 * 10)#a divisao inteira nao deixa num ficar quebrado
 
 
 #a funcao permite colisao entre os objetos
@@ -21,6 +29,7 @@ RIGHT = 1
 DOWN = 2
 
 pontos = 0
+x = 0
 
 pygame.init()
 screen = pygame.display.set_mode((400,400)) #tamanho da tela
@@ -31,9 +40,14 @@ snake = [(200, 200), (210, 200), (220, 200)]
 snake_skin = pygame.Surface((10,10))
 snake_skin.fill((255,255,255))
 
-apple_pos = maca_in_matriz() #posiçao aleatoria para a maça
+apple_bonus = pygame.Surface((10,10))
+apple_bonus_pos = maca_in_matriz(x) #posiçao aleatoria para a maça bonus
+apple_bonus.fill((72, 255, 8))#RGB
+
+apple_pos = maca_in_matriz(x) #posiçao aleatoria para a maça
 apple = pygame.Surface((10,10)) #390 ultimo lugar da tela
 apple.fill((255,0,0))
+
 my_direction = LEFT
 
 #Vamos limitar a valocidade da cobra(FPS)
@@ -56,10 +70,19 @@ while True: #criaçao da tela até o fechamento
                 my_direction = RIGHT
 
     if collision(snake[0], apple_pos):
-        apple_pos = maca_in_matriz()
+        x = 0
+        apple_pos = maca_in_matriz(x)
         pontos = pontos + 1
-        print(pontos)
+        print("Pontuaçao: ", pontos)
         snake.append((0,0))
+    if collision(snake[0], apple_bonus_pos):
+        x = 1
+        apple_bonus_pos = maca_in_matriz(x)
+        pontos = pontos + 2
+        print("Pontuaçao: ", pontos)
+        snake.append((0,0))
+        #time.sleep(random.randint(1, 5))
+
 
     for i in range(len(snake) - 1, 0, -1):
         snake[i] = (snake[i-1][0], snake[i-1][1])
@@ -75,6 +98,7 @@ while True: #criaçao da tela até o fechamento
 
     screen.fill((0,0,0))
     screen.blit(apple, apple_pos)
+    screen.blit(apple_bonus, apple_bonus_pos)
 
     for pos in snake:
         screen.blit(snake_skin, pos)
