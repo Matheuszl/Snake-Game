@@ -1,6 +1,9 @@
 import pygame, random
 from pygame.locals import *
 
+#Este jogo foi desevolvido no intuito de aprender mais sobre a linguagem
+#Aprendiz de: https://www.youtube.com/watch?v=H4TXHI9BRCQ&list=LLP3zwBUBDERBYfK1l72bpkA&index=3&t=0s
+
 #a funcao permite que a maça fique alinhada a matriz da tela
 def maca_in_matriz():
     x = random.randint(0,390)
