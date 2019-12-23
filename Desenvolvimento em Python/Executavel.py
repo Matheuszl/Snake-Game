@@ -20,9 +20,12 @@ LEFT = 3
 RIGHT = 1
 DOWN = 2
 
+pontos = 0
+
 pygame.init()
 screen = pygame.display.set_mode((400,400)) #tamanho da tela
 pygame.display.set_caption('executavel')
+
 
 snake = [(200, 200), (210, 200), (220, 200)]
 snake_skin = pygame.Surface((10,10))
@@ -54,6 +57,8 @@ while True: #criaçao da tela até o fechamento
 
     if collision(snake[0], apple_pos):
         apple_pos = maca_in_matriz()
+        pontos = pontos + 1
+        print(pontos)
         snake.append((0,0))
 
     for i in range(len(snake) - 1, 0, -1):
